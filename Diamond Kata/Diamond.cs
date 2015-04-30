@@ -9,7 +9,9 @@
 E-----E	  | 0    | 7      | 5 
 ----------+------+--------+--------------------------------*/
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Diamond_Kata
@@ -24,14 +26,25 @@ namespace Diamond_Kata
             Assert.AreEqual(diamond, Diamond.Create('A'));
         }
 
+
+
         [Test]
         public void Should_print_diamond_when_call_with_B()
         {
-            const string diamond = "  A\n"  +
-                                   " B B";
+            const string diamond = " A\n" +
+                                   "B B\n" +
+                                   " A";
+            Assert.AreEqual(diamond, Diamond.Create('B'));
+        }
 
-                         
-
+        [Test]
+        public void Should_print_diamond_when_call_with_C()
+        {
+            const string diamond = "  A\n" +
+                                   " B B\n" +
+                                   "C   C\n" +
+                                   " B B\n" +
+                                   "  A";
             Assert.AreEqual(diamond, Diamond.Create('C'));
         }
     }
@@ -48,9 +61,10 @@ namespace Diamond_Kata
             int paddingLeft = middleCharacter - FirstLetter;
             int length = paddingLeft + 1;
             int paddingMiddle = 1;
-
-            foreach (var letter in "AB")
+            
+            foreach (var character in Enumerable.Range('A', middleCharacter+1 - 'A'))
             {
+                var letter = Convert.ToChar(character);
                 var line = string.Empty.PadLeft(paddingLeft, ' ') + letter;
 
                 if (letter != FirstLetter)
@@ -63,7 +77,9 @@ namespace Diamond_Kata
                 length ++;
                 paddingMiddle = length - paddingLeft - 2;
             }
-            return string.Join("\n", lines);
+            var halfDiamond = string.Join("\n", lines);
+            lines.Reverse();
+            return halfDiamond + "\n" + string.Join("\n", lines.Skip(1));
         }
     }
 }
