@@ -8,78 +8,62 @@
 -C---C	  | 1    | 6      | 3 
 E-----E	  | 0    | 7      | 5 
 ----------+------+--------+--------------------------------*/
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 
 namespace Diamond_Kata
 {
-    public class DiamondTest
-    {
-        [Test]
-        public void Should_produce_a_single_charcter_when_diamond_is_smallest()
-        {
-            const string diamond = "A";
-
-            Assert.AreEqual(diamond, Diamond.Create('A'));
-        }
-
-
-
-        [Test]
-        public void Should_print_diamond_when_call_with_B()
-        {
-            const string diamond = " A\n" +
-                                   "B B\n" +
-                                   " A";
-            Assert.AreEqual(diamond, Diamond.Create('B'));
-        }
-
-        [Test]
-        public void Should_print_diamond_when_call_with_C()
-        {
-            const string diamond = "  A\n" +
-                                   " B B\n" +
-                                   "C   C\n" +
-                                   " B B\n" +
-                                   "  A";
-            Assert.AreEqual(diamond, Diamond.Create('C'));
-        }
-    }
-
     public class Diamond
     {
         private const char FirstLetter = 'A';
+        private const char PaddingChar = ' ';
+        private const string LineSeparator = "\n";
 
         public static string Create(char middleCharacter)
         {
             if (middleCharacter == FirstLetter) return "A";
 
+            return FullDiamond(PrepareHalfDiamond(middleCharacter));
+        }
+
+        private static List<string> PrepareHalfDiamond(char middleCharacter)
+        {
             var lines = new List<string>();
             int paddingLeft = middleCharacter - FirstLetter;
             int length = paddingLeft + 1;
             int paddingMiddle = 1;
-            
-            foreach (var character in Enumerable.Range('A', middleCharacter+1 - 'A'))
-            {
-                var letter = Convert.ToChar(character);
-                var line = string.Empty.PadLeft(paddingLeft, ' ') + letter;
 
-                if (letter != FirstLetter)
-                {
-                    line += string.Empty.PadLeft(paddingMiddle, ' ') + letter;
-                }
-                lines.Add(line);
-                
+            foreach (var character in Enumerable.Range('A', middleCharacter + 1 - 'A'))
+            {
+                lines.Add(PrepareDiamondLine(paddingLeft, character, paddingMiddle));
+
                 paddingLeft--;
                 length ++;
+
                 paddingMiddle = length - paddingLeft - 2;
             }
-            var halfDiamond = string.Join("\n", lines);
-            lines.Reverse();
-            return halfDiamond + "\n" + string.Join("\n", lines.Skip(1));
+            return lines;
+        }
+
+        private static string PrepareDiamondLine(int paddingLeft, int character, int paddingMiddle)
+        {
+            var letter = Convert.ToChar(character);
+
+            var line = string.Empty.PadLeft(paddingLeft, PaddingChar) + letter;
+
+            if (letter != FirstLetter)
+            {
+                line += string.Empty.PadLeft(paddingMiddle, PaddingChar) + letter;
+            }
+            return line;
+        }
+
+        private static string FullDiamond(List<string> halfDiamondRaw)
+        {
+            var halfDiamond = string.Join(LineSeparator, halfDiamondRaw);
+            halfDiamondRaw.Reverse();
+            return halfDiamond + LineSeparator + string.Join(LineSeparator, halfDiamondRaw.Skip(1));
         }
     }
 }
