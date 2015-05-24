@@ -1,13 +1,13 @@
-﻿/* --------------------------------------------------------
- Analyse Diamond E                                           
-----------+------+--------+--------------------------------
-          | left | length | middle => length-left-2 letters
-----------+------+--------+--------------------------------
----A	  | 3    | 4      | N/A
---B-B	  | 2    | 5      | 1 
--C---C	  | 1    | 6      | 3 
-E-----E	  | 0    | 7      | 5 
-----------+------+--------+--------------------------------*/
+﻿/* ------------------+------+--------+-----------------------------
+ Analyse Diamond D                                           
+------------------+------+--------+--------------------------------
+                  | left | length | middle => length-left-2 letters
+------------------+------+--------+--------------------------------
+Line 0 ---A	      | 3    | 4      | N/A
+Line 1 --B-B	  | 2    | 5      | 1 
+Line 2 -C---C	  | 1    | 6      | 3 
+Line 3 D-----D	  | 0    | 7      | 5 
+------------------+------+--------+-------------------------------*/
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,25 +38,9 @@ namespace Diamond_Kata
             {
                 lines.Add(PrepareDiamondLine(paddingLeft, character, paddingMiddle));
 
-                paddingLeft--;
-                length ++;
-
-                paddingMiddle = length - paddingLeft - 2;
+                paddingMiddle = ++length - --paddingLeft - 2;
             }
             return lines;
-        }
-
-        private static string PrepareDiamondLine(int paddingLeft, int character, int paddingMiddle)
-        {
-            var letter = Convert.ToChar(character);
-
-            var line = string.Empty.PadLeft(paddingLeft, PaddingChar) + letter;
-
-            if (letter != FirstLetter)
-            {
-                line += string.Empty.PadLeft(paddingMiddle, PaddingChar) + letter;
-            }
-            return line;
         }
 
         private static string FullDiamond(List<string> halfDiamondRaw)
@@ -64,6 +48,18 @@ namespace Diamond_Kata
             var halfDiamond = string.Join(LineSeparator, halfDiamondRaw);
             halfDiamondRaw.Reverse();
             return halfDiamond + LineSeparator + string.Join(LineSeparator, halfDiamondRaw.Skip(1));
+        }
+
+        private static string PrepareDiamondLine(int paddingLeft, int character, int paddingMiddle)
+        {
+            var letter = Convert.ToChar(character);
+            var line = string.Empty.PadLeft(paddingLeft, PaddingChar) + letter;
+
+            if (letter != FirstLetter)
+            {
+                line += string.Empty.PadLeft(paddingMiddle, PaddingChar) + letter;
+            }
+            return line;
         }
     }
 }
